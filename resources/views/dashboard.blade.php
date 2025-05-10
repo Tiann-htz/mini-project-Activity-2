@@ -97,6 +97,7 @@
             <!-- Quick Actions -->
             <div class="mt-8 bg-white overflow-hidden shadow-lg rounded-lg border border-gray-100">
                 <div class="p-6 text-gray-900">
+<<<<<<< HEAD
                     <h3 class="text-lg font-medium mb-5 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -137,6 +138,9 @@
                             </div>
                         </a>
                     </div>
+=======
+                    {{ __("You're logged in Wooowwwwww!") }}
+>>>>>>> 54dafc8d3aa5b1e98722df68bd16857d87e73d30
                 </div>
             </div>
         </div>

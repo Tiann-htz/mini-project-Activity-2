@@ -12,33 +12,44 @@ class MedicineController extends Controller
      * Get expired or expiring medicines based on filter
      */
     public function expiredMedicines(Request $request)
-    {
-        $filter = $request->query('filter', 'all');
-        $today = Carbon::today();
-        
-        $query = Medicine::query();
-        
-        switch ($filter) {
-            case 'expired':
-                $query->where('expiry_date', '<', $today);
-                break;
-            case 'expiring':
-                $query->whereBetween('expiry_date', [$today, $today->copy()->addDays(30)]);
-                break;
-            case 'expiring90':
-                $query->whereBetween('expiry_date', [$today, $today->copy()->addDays(90)]);
-                break;
-            case 'all':
-            default:
-                // For "all", we'll show both expired and those expiring within 90 days
-                $query->where('expiry_date', '<', $today->copy()->addDays(90));
-                break;
-        }
-        
-        $medicines = $query->orderBy('expiry_date')->get();
-        
-        return response()->json($medicines);
+{
+    $filter = $request->query('filter', 'all');
+    $today = Carbon::today();
+    
+    $query = Medicine::query();
+    
+    switch ($filter) {
+        case 'expired':
+            $query->where('expiry_date', '<', $today);
+            break;
+        case 'expiring':
+            $query->whereBetween('expiry_date', [$today, $today->copy()->addDays(30)]);
+            break;
+        case 'expiring90':
+            $query->whereBetween('expiry_date', [$today, $today->copy()->addDays(90)]);
+            break;
+        case 'all':
+        default:
+            // For "all", we'll show both expired and those expiring within 90 days
+            $query->where('expiry_date', '<', $today->copy()->addDays(90));
+            break;
     }
+    
+    $medicines = $query->orderBy('expiry_date')->get();
+    
+    for ($i = 0; $i < count($medicines); $i++) {
+        $expiryDate = Carbon::parse($medicines[$i]->expiry_date);
+        $daysUntilExpiry = $today->diffInDays($expiryDate, false);
+        $medicines[$i]->days_until_expiry = $daysUntilExpiry;
+        $medicines[$i]->status = $daysUntilExpiry < 0 ? 'expired' : 
+                               ($daysUntilExpiry <= 30 ? 'expiring_soon' : 'valid');
+    }
+    
+    return response()->json($medicines);
+}
+
+
+
 
     /**
      * Get count of medicines
@@ -76,17 +87,26 @@ class MedicineController extends Controller
         return response()->json(['medicines' => $lowStockMedicines]);
     }
 
+
+
     /**
      * Get expired medicines
      */
     public function expiredMedicinesList()
-    {
-        $expiredMedicines = Medicine::where('expiry_date', '<', Carbon::now())
-            ->orderBy('expiry_date', 'desc')
-            ->get();
-        
-        return response()->json(['medicines' => $expiredMedicines]);
-    }
+{
+    $expiredMedicines = Medicine::whereIn('id', function($query) {
+        $query->select('id')
+            ->from('medicines')
+            ->where('expiry_date', '<', Carbon::now());
+    })
+    ->orderBy('expiry_date', 'desc')
+    ->get();
+    
+    return response()->json(['medicines' => $expiredMedicines]);
+}
+
+
+
 
     public function index()
     {

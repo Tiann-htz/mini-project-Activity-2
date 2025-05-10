@@ -180,10 +180,10 @@
         <!-- Logo at the very top - Enhanced header section -->
         <div class="px-6 pt-6 pb-8 border-b border-gray-200">
             <div class="flex items-center justify-center">
-                <x-application-logo class="block h-12 w-auto fill-current text-gray-800" />
+                <x-application-logo class="block h-12 w-auto fill-current text-blue-600" />
             </div>
             <div class="mt-3 text-center">
-                <span class="text-xl font-bold text-gray-800">MedManager</span>
+                <span class="text-xl font-bold text-blue-600">MedManager</span>
             </div>
         </div>
         

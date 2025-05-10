@@ -28,7 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/medicines/{medicine}', [MedicineController::class, 'destroy'])->name('medicines.destroy');
     
     // Medicine categories routes
-    Route::get('/categories', [CategoryController::class, 'index'])->name('categories');
+    Route::get('/categories', [CategoryController::class, 'getCategoriesWithMedicineCount'])->name('categories'); // Updated to use optimized method
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
     Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
     Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');

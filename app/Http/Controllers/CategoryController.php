@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Medicine;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
@@ -22,6 +23,32 @@ class CategoryController extends Controller
         $categories = Category::all();
         return view('categories', compact('categories'));
     }
+
+
+     
+
+    /**
+     * Get categories with medicine count
+     */
+    public function getCategoriesWithMedicineCount()
+    {
+        $categories = Category::select('categories.*')
+            ->selectSub(
+                DB::table('category_medicine')
+                    ->selectRaw('COUNT(*)')
+                    ->whereColumn('category_medicine.category_id', 'categories.id'),
+                'medicine_count'
+            )
+            ->withCount('medicines')
+            ->orderBy('name')
+            ->get();
+
+        return view('categories', compact('categories'));
+    }
+
+
+
+
 
     public function store(Request $request)
     {

@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+        <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-xl font-semibold">Medicine Categories</h2>
@@ -19,6 +19,7 @@
         <tr>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Medicine Count</th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assigned Medicines</th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
         </tr>
@@ -28,6 +29,11 @@
             <tr id="category-{{ $category->id }}">
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $category->name }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $category->description }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded">
+                        {{ $category->medicine_count ?? $category->medicines_count ?? 0 }}
+                    </span>
+                </td>
                 <td class="px-6 py-4 text-sm text-gray-500 assigned-medicines">
                     <div class="flex flex-wrap gap-1 max-w-md">
                         @forelse($category->medicines as $medicine)
@@ -59,7 +65,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="4" class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">No categories found</td>
+                <td colspan="5" class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">No categories found</td>
             </tr>
         @endforelse
     </tbody>
@@ -426,7 +432,7 @@
                     const tableBody = document.querySelector('tbody');
                     if (tableBody.children.length === 0) {
                         const noCategories = document.createElement('tr');
-                        noCategories.innerHTML = '<td colspan="4" class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">No categories found</td>';
+                        noCategories.innerHTML = '<td colspan="5" class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">No categories found</td>';
                         tableBody.appendChild(noCategories);
                     }
                 })
